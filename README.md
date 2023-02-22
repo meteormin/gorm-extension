@@ -26,6 +26,7 @@ import (
 )
 
 const Host = "localhost"
+const Username = "test"
 const Password = "test"
 const Dbname = "test"
 const Port = "5432"
@@ -112,4 +113,60 @@ type GenericRepository[T interface{}] interface {
 
 ```
 
+### hooks
 
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/miniyus/gorm-extension/gormhooks"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"log"
+)
+
+const Host = "localhost"
+const Username = "test"
+const Password = "test"
+const Dbname = "test"
+const Port = "5432"
+const SslMode = "false"
+const TimeZone = "Asia/Seoul"
+
+type TestModel struct {
+	gorm.Model
+	Name string
+}
+
+func (tm *TestModel) Hooks() gormhooks.Hooks[*TestModel] {
+	return gormhooks.GetHooks(tm)
+}
+
+func (tm *TestModel) AfterFind(tx *gorm.DB) error {
+	return tm.Hooks().AfterFind(tx)
+}
+
+func main() {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		Host, Username, Password, Dbname, Port, SslMode, TimeZone,
+	)
+
+	db, err := gorm.Open(postgres.Open(dsn))
+	if err != nil {
+		panic(err)
+	}
+	var model *TestModel // must pointer variable
+
+	hooks := gormhooks.New(model)
+	hooks.HandleAfterFind(func(q *TestModel, tx *gorm.DB) (err error) {
+		log.Print(q)
+		return nil
+	})
+
+	find := TestModel{}
+
+	db.Find(&find)
+}
+
+```
