@@ -9,11 +9,11 @@ import (
 var hooksMap = make(map[reflect.Type]interface{})
 
 func GetHooks[T interface{}](model T) *Hooks[T] {
-	if hooksMap[reflect.TypeOf(model)] == nil {
+	if hooksMap[reflect.TypeOf(model).Elem()] == nil {
 		return New(model)
 	}
 
-	get := hooksMap[reflect.TypeOf(model)]
+	get := hooksMap[reflect.TypeOf(model).Elem()]
 
 	h, ok := get.(*Hooks[T])
 	if !ok {
@@ -100,7 +100,7 @@ func New[T interface{}](model T) *Hooks[T] {
 		modify:   modify[T]{before: nil},
 	}
 
-	hooksMap[reflect.TypeOf(model)] = h
+	hooksMap[reflect.TypeOf(model).Elem()] = h
 	return h
 }
 
