@@ -35,10 +35,10 @@ func Register[T interface{}](models ...T) {
 	}
 }
 
-func GetRegisteredHooks() []*Hooks[interface{}] {
-	var hooks []*Hooks[interface{}]
+func GetRegisteredHooks() []interface{} {
+	var hooks []interface{}
 	for _, h := range hooksMap {
-		hooks = append(hooks, h.(*Hooks[interface{}]))
+		hooks = append(hooks, h)
 	}
 
 	return hooks
