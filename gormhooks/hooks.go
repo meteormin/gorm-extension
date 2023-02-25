@@ -25,17 +25,7 @@ func GetHooks[T interface{}](model T) *Hooks[T] {
 	return h
 }
 
-func Register[T interface{}](models ...T) {
-	if len(models) == 0 {
-		panic("models parameters must be not empty!")
-	}
-
-	for _, model := range models {
-		New(model)
-	}
-}
-
-func GetRegisteredHooks() []interface{} {
+func RegisteredHooks() []interface{} {
 	var hooks []interface{}
 	for _, h := range hooksMap {
 		hooks = append(hooks, h)
