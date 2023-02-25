@@ -8,6 +8,42 @@ import (
 
 var hooksMap = make(map[reflect.Type]interface{})
 
+func GetHooks[T interface{}](model T) *Hooks[T] {
+	if hooksMap[reflect.TypeOf(model)] == nil {
+		return New(model)
+	}
+
+	get := hooksMap[reflect.TypeOf(model)]
+
+	h, ok := get.(*Hooks[T])
+	if !ok {
+		return nil
+	}
+
+	h.model = model
+
+	return h
+}
+
+func Register(models ...interface{}) {
+	if len(models) == 0 {
+		panic("models parameters must be not empty!")
+	}
+
+	for _, model := range models {
+		New(model)
+	}
+}
+
+func GetRegisteredHooks() []*Hooks[interface{}] {
+	var hooks []*Hooks[interface{}]
+	for _, h := range hooksMap {
+		hooks = append(hooks, h.(*Hooks[interface{}]))
+	}
+
+	return hooks
+}
+
 type HasHooks interface {
 	callbacks.BeforeSaveInterface
 	callbacks.AfterSaveInterface
@@ -65,23 +101,6 @@ func New[T interface{}](model T) *Hooks[T] {
 	}
 
 	hooksMap[reflect.TypeOf(model)] = h
-	return h
-}
-
-func GetHooks[T interface{}](model T) *Hooks[T] {
-	if hooksMap[reflect.TypeOf(model)] == nil {
-		return New(model)
-	}
-
-	get := hooksMap[reflect.TypeOf(model)]
-
-	h, ok := get.(*Hooks[T])
-	if !ok {
-		return nil
-	}
-
-	h.model = model
-
 	return h
 }
 
