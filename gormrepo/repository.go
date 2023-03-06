@@ -51,16 +51,24 @@ func (g *genericRepository[T]) getModel() T {
 
 func (g *genericRepository[T]) Debug() GenericRepository[T] {
 	g.debug = true
-	return g
+	return &genericRepository[T]{
+		model:   g.model,
+		debug:   true,
+		preload: g.preload,
+	}
 }
 
 func (g *genericRepository[T]) Preload(query string, args ...interface{}) GenericRepository[T] {
-	g.preload = &Preload{
+	preload := &Preload{
 		query: query,
 		args:  args,
 	}
 
-	return g
+	return &genericRepository[T]{
+		model:   g.model,
+		debug:   g.debug,
+		preload: preload,
+	}
 }
 
 func (g *genericRepository[T]) All() ([]T, error) {
