@@ -53,6 +53,7 @@ func (g *genericRepository[T]) Debug() GenericRepository[T] {
 	g.debug = true
 	return &genericRepository[T]{
 		model:   g.model,
+		db:      g.db,
 		debug:   true,
 		preload: g.preload,
 	}
@@ -66,6 +67,7 @@ func (g *genericRepository[T]) Preload(query string, args ...interface{}) Generi
 
 	return &genericRepository[T]{
 		model:   g.model,
+		db:      g.db,
 		debug:   g.debug,
 		preload: preload,
 	}
