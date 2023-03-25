@@ -28,7 +28,7 @@ type genericRepository[T interface{}] struct {
 	model   T
 	db      *gorm.DB
 	debug   bool
-	preload *Preload
+	preload []*Preload
 }
 
 func (g *genericRepository[T]) DB() *gorm.DB {
@@ -38,8 +38,10 @@ func (g *genericRepository[T]) DB() *gorm.DB {
 		db = db.Debug()
 	}
 
-	if g.preload != nil {
-		db = db.Preload(g.preload.query, g.preload.args...)
+	if g.preload != nil && len(g.preload) != 0 {
+		for _, preload := range g.preload {
+			db = db.Preload(preload.query, preload.args...)
+		}
 	}
 
 	return db
@@ -65,11 +67,19 @@ func (g *genericRepository[T]) Preload(query string, args ...interface{}) Generi
 		args:  args,
 	}
 
+	var preloads []*Preload
+
+	if g.preload != nil {
+		preloads = append(preloads, g.preload...)
+	}
+
+	preloads = append(preloads, preload)
+
 	return &genericRepository[T]{
 		model:   g.model,
 		db:      g.db,
 		debug:   g.debug,
-		preload: preload,
+		preload: preloads,
 	}
 }
 
