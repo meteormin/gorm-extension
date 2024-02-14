@@ -2,7 +2,7 @@ package gormrepo_test
 
 import (
 	"errors"
-	"github.com/miniyus/gorm-extension/gormrepo"
+	"github.com/meteormin/gorm-extension/gormrepo"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
