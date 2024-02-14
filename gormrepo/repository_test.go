@@ -31,7 +31,7 @@ func connectDB() *gorm.DB {
 func TestNewGenericRepository(t *testing.T) {
 	db := connectDB()
 
-	repo := gormrepo.NewGenericRepository(db, TestEntity{})
+	repo = gormrepo.NewGenericRepository(db, TestEntity{})
 
 	if repo.DB() != db {
 		t.Error("fail")
