@@ -1,4 +1,4 @@
-module github.com/miniyus/gorm-extension
+module github.com/meteormin/gorm-extension
 
 go 1.21
 
