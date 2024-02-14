@@ -7,7 +7,7 @@
 
 ## install
 ```shell
-go get github.com/miniyus/gorm-extension
+go get github.com/meteormin/gorm-extension
 ```
 
 ## usage
@@ -19,7 +19,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/miniyus/gorm-extension/gormrepo"
+	"github.com/meteormin/gorm-extension/gormrepo"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -120,7 +120,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/miniyus/gorm-extension/gormhooks"
+	"github.com/meteormin/gorm-extension/gormhooks"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
