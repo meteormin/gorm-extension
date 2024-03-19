@@ -56,34 +56,9 @@ func newTestRepo() gormrepo.GenericRepository[TestEntity] {
 
 var repo = newTestRepo()
 
-func TestGenericRepository_All(t *testing.T) {
-	all, err := repo.Debug().All()
-	if err != nil {
-		t.Error(err)
-	}
-
-	log.Print(all)
-}
-
-func TestGenericRepository_Find(t *testing.T) {
-	find, err := repo.Debug().Find(1)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	if find.ID != 1 {
-		t.Errorf("ID Match Fail: req: %d, real: %d", 1, find.ID)
-		return
-	}
-
-	log.Print(find)
-}
-
 func TestGenericRepository_Create(t *testing.T) {
 	_, err := repo.Debug().FindByAttribute("name", "TEST")
 	if err != nil {
-		t.Error(err)
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			t.Error("exists ")
 			return
@@ -107,6 +82,30 @@ func TestGenericRepository_Create(t *testing.T) {
 	}
 
 	log.Print(create)
+}
+
+func TestGenericRepository_All(t *testing.T) {
+	all, err := repo.Debug().All()
+	if err != nil {
+		t.Error(err)
+	}
+
+	log.Print(all)
+}
+
+func TestGenericRepository_Find(t *testing.T) {
+	find, err := repo.Debug().Find(1)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if find.ID != 1 {
+		t.Errorf("ID Match Fail: req: %d, real: %d", 1, find.ID)
+		return
+	}
+
+	log.Print(find)
 }
 
 func TestGenericRepository_FindByAttribute(t *testing.T) {
@@ -184,13 +183,21 @@ func TestGenericRepository_Save(t *testing.T) {
 }
 
 func TestGenericRepository_Update(t *testing.T) {
-	update, err := repo.Debug().Update(1, TestEntity{Name: "TEST"})
+	find, err := repo.Debug().Preload("TestRelationModel").Find(1)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// child not update.
+	find.TestRelationModel.Seq = 9999
+
+	update, err := repo.Debug().Update(1, *find)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	log.Print(update)
+	log.Print(update.TestRelationModel.Seq)
 }
 
 func TestGenericRepository_Preload(t *testing.T) {

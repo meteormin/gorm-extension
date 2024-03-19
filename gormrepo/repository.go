@@ -1,6 +1,8 @@
 package gormrepo
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type GenericRepository[T interface{}] interface {
 	DB() *gorm.DB
@@ -111,7 +113,7 @@ func (g *genericRepository[T]) Update(pk uint, ent T) (*T, error) {
 			return err
 		}
 
-		if err := tx.Model(&model).Updates(ent).Error; err != nil {
+		if err := tx.Model(&model).Updates(&ent).Error; err != nil {
 			return err
 		}
 
@@ -119,6 +121,10 @@ func (g *genericRepository[T]) Update(pk uint, ent T) (*T, error) {
 	})
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err = g.DB().First(&model, pk).Error; err != nil {
 		return nil, err
 	}
 
