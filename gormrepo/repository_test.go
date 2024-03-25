@@ -189,7 +189,7 @@ func TestGenericRepository_Update(t *testing.T) {
 	}
 
 	// child not update.
-	find.TestRelationModel.Seq = 9999
+	find.Name = "101010"
 
 	update, err := repo.Debug().Update(1, *find)
 	if err != nil {
@@ -197,7 +197,7 @@ func TestGenericRepository_Update(t *testing.T) {
 		return
 	}
 
-	log.Print(update.TestRelationModel.Seq)
+	log.Print(update.Name)
 }
 
 func TestGenericRepository_Preload(t *testing.T) {

@@ -124,11 +124,9 @@ func (g *genericRepository[T]) Update(pk uint, ent T) (*T, error) {
 		return nil, err
 	}
 
-	if err = g.DB().First(&model, pk).Error; err != nil {
-		return nil, err
-	}
+	err = g.DB().First(&model, pk).Error
 
-	return &model, nil
+	return &model, err
 }
 
 func (g *genericRepository[T]) Save(ent T) (*T, error) {
